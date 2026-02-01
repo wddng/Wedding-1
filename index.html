@@ -437,6 +437,12 @@ button.action:hover{transform:scale(1.03)}
   <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>  
   <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script> 
   <script>
+function buatIdTamu(nama){
+  return nama
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "_")
+    .replace(/^_|_$/g, "");
+}
 let qrGenerated = false;
 
 function openQrPopup(){
@@ -445,19 +451,15 @@ function openQrPopup(){
 
   if(!qrGenerated){
 
-    // 1️⃣ bikin ID tamu aman
-    const idTamu = namaTamu
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, "_")
-      .replace(/^_|_$/g, "");
 
-    // 2️⃣ isi QR: id|nama
+    // 2️ isi QR: id|nama
+    const idTamu = buatIdTamu(namaTamu);
     const qrText = idTamu + "|" + namaTamu;
 
-    // 3️⃣ bersihkan QR lama (antisipasi bug)
+    // 3️ bersihkan QR lama (antisipasi bug)
     document.getElementById("qrcode").innerHTML = "";
 
-    // 4️⃣ generate QR
+    // 4️ generate QR
     new QRCode(document.getElementById("qrcode"), {
       text: qrText,
       width: 280,
