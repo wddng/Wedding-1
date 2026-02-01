@@ -1,24 +1,74 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
-<meta charset="utf-8">
-<title>Tes Kamera</title>
+<meta charset="UTF-8">
+<title>Scan QR Buku Tamu</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script src="https://unpkg.com/html5-qrcode"></script>
+
+<style>
+body{
+  font-family:Arial;
+  text-align:center;
+  padding:16px;
+}
+#reader{
+  width:300px;
+  margin:auto;
+}
+#status{
+  margin-top:14px;
+  font-size:15px;
+}
+</style>
 </head>
 <body>
 
-<h2>Tes Kamera</h2>
-<video id="video" autoplay playsinline style="width:100%"></video>
+<h3>📸 Scan QR Tamu</h3>
+<div id="reader"></div>
+<div id="status">Arahkan kamera ke QR</div>
 
 <script>
-navigator.mediaDevices.getUserMedia({
-  video: { facingMode: "environment" }
-})
-.then(stream => {
-  document.getElementById("video").srcObject = stream;
-})
-.catch(err => {
-  alert("ERROR: " + err.name);
-});
+let qr;
+
+function startScan(){
+  Html5Qrcode.getCameras().then(cameras => {
+    if(!cameras.length){
+      alert("Kamera tidak ditemukan");
+      return;
+    }
+
+    // Ambil kamera BELAKANG (biasanya index terakhir)
+    const cameraId = cameras[cameras.length - 1].id;
+
+    qr = new Html5Qrcode("reader");
+    qr.start(
+      cameraId,
+      {
+        fps: 8,
+        qrbox: { width: 220, height: 220 }
+      },
+      onScanSuccess,
+      err => {}
+    );
+
+  }).catch(err => {
+    alert("Error kamera: " + err);
+  });
+}
+
+function onScanSuccess(text){
+  document.getElementById("status").innerHTML =
+    "✅ Scan berhasil:<br><b>" + text + "</b>";
+
+  // STOP kamera setelah 1 scan (WAJIB)
+  qr.stop();
+}
+
+// START SETELAH PAGE READY
+window.addEventListener("load", startScan);
 </script>
 
 </body>
