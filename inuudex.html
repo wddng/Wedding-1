@@ -623,12 +623,13 @@ function kirimUcapan(){
     return;
   }
 
-  const idTamu = namaTamu.replace(/\s+/g,'_').toLowerCase();
+  const idTamu = buatIdTamu(namaTamu);
   const refTamu = db.ref("bukutamu/"+idTamu);
+  const btn = document.getElementById("btnUcapan");
 
   refTamu.once("value", snap => {
 
-    // JIKA SUDAH ADA UCAPAN → MODE EDIT
+    // SUDAH PERNAH KIRIM → EDIT
     if(snap.exists()){
       refTamu.update({
         pesan: pesan,
@@ -638,7 +639,7 @@ function kirimUcapan(){
       alert("Ucapan berhasil diperbarui ✏️");
     }
 
-    // JIKA BELUM ADA → MODE KIRIM PERTAMA
+    // PERTAMA KALI KIRIM
     else{
       refTamu.set({
         nama: namaTamu,
@@ -650,6 +651,10 @@ function kirimUcapan(){
 
       alert("Ucapan berhasil dikirim 💛");
     }
+
+    // 🔥 INI KUNCINYA
+    btn.textContent = "✏️ Edit Ucapan";
+    btn.disabled = false;
   });
 }
 db.ref("bukutamu").on("value", snap => {
@@ -677,176 +682,4 @@ const badge = data.hadir
       margin:10px 0;
       border-radius:14px;
       background:${warna};
-      box-shadow:0 2px 6px rgba(0,0,0,0.06);
-      position:relative;
-    `;
-
-    item.innerHTML = `
-      <b>${data.nama || "Tamu"}</b>
-      <small style="margin-left:6px">${badge}</small><br>
-      <small>${data.pesan || ""}</small>
-
-      <div style="
-        position:absolute;
-        right:12px;
-        top:50%;
-        transform:translateY(-50%);
-        cursor:pointer;
-        text-align:center;
-      " onclick="likeUcapan('${key}')">
-        ❤️
-        <div id="like-${key}" style="font-size:12px;color:#b8860b">
-          ${data.like ?? 0}
-        </div>
-      </div>
-    `;
-
-    list.prepend(item);
-  });
-});
-  
-  function likeUcapan(id){
-  const key = "liked_"+id;
-
-  if(localStorage.getItem(key)){
-    alert("Kamu sudah menyukai ucapan ini ❤️");
-    return;
-  }
-
-  localStorage.setItem(key, "1");
-
-  db.ref("bukutamu/"+id+"/like")
-    .transaction(current => (current ?? 0)+1);
-}
-function formatJam(ts){
-  if(!ts) return "";
-  const d = new Date(ts);
-  return d.toLocaleTimeString("id-ID", {
-    hour: "2-digit",
-    minute: "2-digit"
-  }) + " WIB";
-}
-db.ref("bukutamu").on("child_changed",snap=>{
-  const data=snap.val()||{};
-  const el=document.getElementById("like-"+snap.key);
-  if(el) el.textContent=data.like ?? 0;
-});
-  const idTamu = namaTamu.replace(/\s+/g,'_').toLowerCase();
-
-db.ref("bukutamu/"+idTamu).once("value", snap=>{
-  if(!snap.exists()) return;
-
-  const data = snap.val();
-  if(data.pesan){
-    document.getElementById("ucapan").value = data.pesan;
-    document.getElementById("btnUcapan").textContent = "✏️ Edit Ucapan";
-  }
-});
-
-
-/************************************************  
- * GALERI OTOMATIS + POPUP + SWIPE  
- ************************************************/  
-let galleryImages=[],currentIndex=0;  
-function generateGallery(){  
-  const grid=document.getElementById("galeriGrid");  
-  const folder="media/";  
-  const total=18;  
-  for(let i=1;i<=total;i++){  
-    const img=document.createElement("img");  
-    img.src=folder+i+".jpg";  
-    img.alt="Foto "+i;  
-    grid.appendChild(img);  
-  }  
-  initGallery();  
-}  
-function initGallery(){  
-  galleryImages=Array.from(document.querySelectorAll("#galeriGrid img"));  
-  galleryImages.forEach((img,i)=>img.addEventListener("click",()=>openGallery(i)));  
-}  
-function openGallery(i){  
-  currentIndex=i;  
-  const popup=document.getElementById("galleryPopup");  
-  const img=document.getElementById("popupImg");  
-  img.src=galleryImages[i].src;  
-  popup.style.display="flex";  
-  setTimeout(()=>popup.classList.add("show"),50);  
-}  
-function closeGallery(){  
-  const popup=document.getElementById("galleryPopup");  
-  popup.classList.remove("show");  
-  setTimeout(()=>popup.style.display="none",400);  
-}  
-  
-  
-  const headerImages = {
-  home: 'media/header1.jpg',
-  acara: 'media/header2.jpg',
-  galeri: 'media/header3.jpg',
-  bukutamu: 'media/header4.jpg',
-  lokasi: 'media/header5.jpg'
-};
-
-function changeHeaderImage(tabId){
-  const header = document.querySelector('header');
-  if(headerImages[tabId]){
-    header.classList.add('animate'); // trigger animasi
-    setTimeout(()=> header.classList.remove('animate'), 800);
-
-    // ganti foto
-    header.style.backgroundImage = `url('${headerImages[tabId]}')`;
-  }
-}
-// --- SWIPE POPUP ---  
-let startX=0,endX=0;  
-const popup=document.getElementById("galleryPopup");  
-popup.addEventListener("touchstart", e=>{startX=e.touches[0].clientX;});  
-popup.addEventListener("touchmove", e=>{endX=e.touches[0].clientX;});  
-popup.addEventListener("touchend", ()=>{  
-  const diff=endX-startX;  
-  if(Math.abs(diff)>50){  
-    if(diff<0) showNext();  
-    else showPrev();  
-  }  
-  startX=0; endX=0;  
-});  
-  
-  
-  function animasiHeader() {
-  const kiri = document.getElementById("imgKiri");
-  const kanan = document.getElementById("imgKanan");
-
-  kiri.classList.remove("animate-left");
-  kanan.classList.remove("animate-right");
-
-  // reset biar bisa dipicu ulang
-  void kiri.offsetWidth;
-
-  kiri.classList.add("animate-left");
-  kanan.classList.add("animate-right");
-
-  // Balik normal setelah animasi selesai
-  setTimeout(() => {
-    kiri.classList.remove("animate-left");
-    kanan.classList.remove("animate-right");
-  }, 900);
-}
-function showNext(){currentIndex=(currentIndex+1)%galleryImages.length;document.getElementById("popupImg").src=galleryImages[currentIndex].src;}  
-function showPrev(){currentIndex=(currentIndex-1+galleryImages.length)%galleryImages.length;document.getElementById("popupImg").src=galleryImages[currentIndex].src;}  
-  </script>  
-  <script>
-const stickyBride = document.getElementById("stickyBride");
-const header = document.querySelector("header");
-
-window.addEventListener("scroll", () => {
-  const triggerPoint = header.offsetHeight - 60;
-
-  if(window.scrollY > triggerPoint){
-    stickyBride.classList.add("show");
-  } else {
-    stickyBride.classList.remove("show");
-  }
-});
-</script>
-</body>  
-</html>
+      box-shadow:0 2px 6px rg
