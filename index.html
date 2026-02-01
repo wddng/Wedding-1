@@ -1,0 +1,850 @@
+<!DOCTYPE html>  <html lang="id">  
+<head>  
+<meta charset="UTF-8">  
+<meta name="viewport" content="width=device-width, initial-scale=1.0">  
+<title>Undangan Pernikahan Ultra Cinematic</title>  
+<style>  
+*{margin:0;padding:0;box-sizing:border-box;font-family:Segoe UI,Arial,sans-serif;}  
+body{background:#faf7f4;overflow-x:hidden;padding-bottom:60px;position:relative;}  
+body::before{content:'';position:absolute;inset:0;background:url('https://images.unsplash.com/photo-1606788075764-fd7be29a0c9c?auto=format&fit=crop&w=800&q=60') center/cover no-repeat;opacity:0.05;z-index:0;transition:opacity 1s}  /* OPENING */
+#opening{position:fixed;inset:0;z-index:9999;background:#fff;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(2px);opacity:1;transition:all 0.6s;}
+.opening-box{background:rgba(255,255,255,0.95);padding:28px;border-radius:18px;text-align:center;opacity:0;transform:scale(0.8);transition:all 0.8s;}
+.opening-box.show{opacity:1;transform:scale(1);}
+.opening-box h1, .opening-box p{opacity:0;transform:translateY(20px);transition:all 0.8s;}
+.opening-box.show h1,.opening-box.show p{opacity:1;transform:translateY(0);}
+.opening-box button{margin-top:14px;padding:10px 22px;border:0;border-radius:22px;background:#b8860b;color:#fff;font-size:15px;cursor:pointer;opacity:0;transform:scale(0.8);transition:all 0.6s;}
+.opening-box.show button{opacity:1;transform:scale(1);}
+
+/* HEADER */
+header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 36px 16px;
+  color: #fff;
+  position: relative;
+  min-height: 220px;       /* tinggi tetap */
+  height: 220px;           /* pastikan fixed */
+  overflow: hidden;
+  z-index: 1;
+  background: url('media/header1.jpg') center/cover no-repeat;
+  transition: background-image 0.8s ease-in-out;
+}
+
+/* Efek cinematic via pseudo element */
+header::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: inherit;
+  background-size: cover;
+  background-position: center;
+  transition: opacity 0.8s ease, transform 0.8s ease;
+  z-index: 0;
+  transform: scale(1);
+  opacity: 0.9;
+}
+
+header.animate::before {
+  transform: scale(1.05);
+  opacity: 1;
+}
+
+@keyframes slowZoom{
+  from{background-size:100%;}
+  to{background-size:115%;}
+}
+/* COUNTDOWN */
+#countdownWrapper{width:100%;text-align:center;margin:16px 0;font-size:13px;color:#333;position:sticky;top:0;z-index:20;background:rgba(250,247,244,0.95);padding:8px 0;box-shadow:0 2px 6px rgba(0,0,0,0.1);}
+#countdownWrapper div{font-size:12px;color:#666;margin-bottom:6px;}
+#countdownWrapper ul{display:flex;justify-content:center;gap:20px;list-style:none;padding:0;margin:0;}
+#countdownWrapper ul li span{font-weight:600;min-width:24px;display:inline-block;}
+
+/* TAB */
+.tabs{display:flex;justify-content:space-around;background:#fff;position:fixed;bottom:0;left:0;right:0;z-index:12;border-top:1px solid #ddd;}
+.tabs button{flex:1;padding:12px;border:0;background:none;font-size:14px;cursor:pointer;}
+.tabs button.active{color:#b8860b;font-weight:700;}
+.tab-content{display:none;padding:18px 16px 80px;position:relative;opacity:0;transition:opacity 0.5s;}
+.tab-content.active{display:block;}
+.tab-content.show{opacity:1;}
+
+/* SLIDE UP TEXT */
+.slideUp{opacity:0;transform:translateY(20px);transition:all 0.6s ease-out;}
+.slideUp.show{opacity:1;transform:translateY(0);}
+
+/* FORM */
+input,select,textarea{width:100%;padding:10px;margin:6px 0;border-radius:10px;border:1px solid #ccc}
+input[readonly]{background:#eee}
+button.action{width:100%;padding:10px;border:0;border-radius:12px;background:#b8860b;color:#fff;margin-top:6px;cursor:pointer;transition:0.3s}
+button.action:hover{transform:scale(1.03)}
+
+/* GALERI */
+.gallery-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;padding:6px 0;transform:translateY(20px);opacity:0;transition:all 0.6s;}
+.gallery-grid.show{transform:translateY(0);opacity:1;}
+.gallery-grid img{width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:8px;cursor:pointer;opacity:1;transition:0.3s}
+
+/* POPUP GALERI FULLSCREEN */
+#galleryPopup{position:fixed;top:0;left:0;width:100%;height:100%;z-index:99999;background:rgba(0,0,0,.95);display:none;align-items:center;justify-content:center;overflow:hidden;}
+#galleryPopup img{width:100%;height:100%;object-fit:cover;opacity:0;transform:translateY(120px) scale(0.85) rotateX(5deg);transition:transform 0.7s cubic-bezier(0.68,-0.6,0.32,1.6), opacity 0.5s ease-out;}
+#galleryPopup.show img{opacity:1;transform:translateY(0) scale(1) rotateX(0deg);}
+#galleryPopup .close{position:fixed;top:16px;right:20px;color:#fff;font-size:28px;cursor:pointer;z-index:10000;}
+.typing-cursor::after{
+  content:"|";
+  margin-left:4px;
+  animation:blink 1s infinite;
+}
+@keyframes blink{
+  0%,50%,100%{opacity:1;}
+  25%,75%{opacity:0;}
+}
+  
+  /* HEADER IMAGE ANIMATION */
+.header-img {
+  transition: transform 0.9s cubic-bezier(.22,.61,.36,1);
+  will-change: transform;
+}
+
+/* Saat animasi aktif */
+.header-img.animate-left {
+  transform: translateX(-18px) scale(1.08) rotate(-1deg);
+}
+
+.header-img.animate-right {
+  transform: translateX(18px) scale(1.08) rotate(1deg);
+}
+  
+  
+  .header-text h2 {
+  position: relative;
+  font-size: 28px;
+  letter-spacing: 1px;
+  font-weight: 600;
+  background: linear-gradient(90deg, #fff8dc, #ffd700, #fff2b0, #ffd700, #fff8dc);
+  background-size: 300% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: goldFlow 8s linear infinite, glowPulse 4s ease-in-out infinite;
+  overflow: hidden;
+}
+
+/* Gradient emas bergerak pelan */
+@keyframes goldFlow {
+  0% { background-position: 0% center; }
+  100% { background-position: 300% center; }
+}
+
+/* Glow lembut */
+@keyframes glowPulse {
+  0%,100% {
+    text-shadow:
+      0 0 6px rgba(255,215,0,0.4),
+      0 0 14px rgba(255,215,0,0.25),
+      0 0 24px rgba(255,215,0,0.2);
+  }
+  50% {
+    text-shadow:
+      0 0 12px rgba(255,215,0,0.7),
+      0 0 22px rgba(255,215,0,0.45),
+      0 0 34px rgba(255,215,0,0.25);
+  }
+}
+  
+  
+  /* ===== TEKS SECTION RAPIH ===== */
+.section {
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.section h2 {
+  font-size: 26px;
+  margin-bottom: 14px;
+  font-weight: 600;
+}
+
+.section p,
+#acaraCard {
+  max-width: 500px;
+  margin: 0 auto;
+  line-height: 1.7;
+  font-size: 15px;
+}
+  
+  #acaraCard {
+  background: white;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+  white-space: pre-line;
+}
+  .slide-up {
+  text-align: center;
+}
+  
+  /* STICKY NAMA PENGANTIN */
+#stickyBride{
+  position: fixed;
+  top: -60px;
+  left: 0;
+  right: 0;
+  z-index: 999;
+  height: 48px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: rgba(250,247,244,0.96);
+  backdrop-filter: blur(8px);
+
+  font-weight: 600;
+  letter-spacing: 1px;
+  color: #b8860b;
+
+  transition: top 0.4s ease;
+}
+
+/* aktif saat scroll */
+#stickyBride.show{
+  top: 0;
+}
+  /* QR Bubble */
+#qrBubble{
+  position:absolute;
+  right:18px;
+  bottom:20px;
+  z-index:10002;
+}
+
+.qr-hint{
+  position:absolute;
+  right:50px;
+  bottom:50%;
+  transform:translateY(50%);
+  background:#ffffff;
+  padding:8px 12px;
+  border-radius:12px;
+  font-size:11px;
+  line-height:1.4;
+  color:#333;
+  box-shadow:0 6px 18px rgba(0,0,0,.25);
+
+  white-space:nowrap;      /* ⬅️ KUNCI UTAMA */
+  max-width:fit-content;          /* pastikan tidak dibatasi */
+}
+
+/* panah bubble */
+.qr-hint::after{
+  content:"";
+  position:absolute;
+  right:-8px;
+  top:50%;
+  transform:translateY(-50%);
+  border-width:8px 0 8px 8px;
+  border-style:solid;
+  border-color:transparent transparent transparent #fff;
+}
+#qrBubble:hover{
+  transform:scale(1.08);
+}
+#qrBubble img{
+  width:28px;
+  height:28px;
+}
+
+/* Popup QR */
+#qrPopup{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.6);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:10000;
+}
+#qrPopup.show{display:flex;}
+
+.qr-box{
+  background:#fff;
+  padding:24px;
+  border-radius:18px;
+  text-align:center;
+  width:min(90vw, 400px);
+  animation:zoomIn .4s ease;
+  position:relative;
+}
+.qr-box h3{
+  margin-bottom:10px;
+}
+.qr-box p{
+  margin-top:12px;
+  font-size:14px;
+  color:#555;
+}
+.qr-box .close{
+  position:absolute;
+  right:14px;
+  top:10px;
+  cursor:pointer;
+  font-size:18px;
+}
+
+@keyframes zoomIn{
+  from{transform:scale(.7);opacity:0}
+  to{transform:scale(1);opacity:1}
+}
+  
+  /* === OPENING LUXURY CARD === */
+.opening-card{
+  background: rgba(255,255,255,0.96);
+  border-radius: 22px;
+  padding: 26px 22px 28px;
+  width: min(90%, 380px);
+  box-shadow:
+    0 20px 40px rgba(0,0,0,0.15),
+    inset 0 0 0 1px rgba(218,165,32,0.25);
+  position: relative;
+}
+
+.opening-photo{
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  margin: -80px auto 16px;
+  background: url('media/pengantin.jpg') center/cover no-repeat;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.25);
+  border: 4px solid #fff;
+}
+
+.tamu-card{
+  background: linear-gradient(145deg,#fff,#faf6ef);
+  border-radius: 16px;
+  padding: 14px 16px;
+  margin-top: 12px;
+  box-shadow: inset 0 0 0 1px rgba(184,134,11,0.25);
+}
+
+.tamu-card small{
+  color:#777;
+  letter-spacing:1px;
+}
+
+.tamu-card h1{
+  font-size: 22px;
+  margin-top: 6px;
+  color:#b8860b;
+  font-weight:600;
+}
+  
+  </style>
+
+</head>  
+<body>  <!-- OPENING --> 
+  <div id="opening">  
+<div id="opening">
+  <div class="opening-box" id="openingBox">
+
+    <div class="opening-photo"></div>
+
+    <div class="tamu-card">
+      <small>Kepada Yth</small>
+      <h1 id="namaTamuOpen">Tamu Undangan</h1>
+    </div>
+
+    <button onclick="bukaUndangan()">💌 Buka Undangan</button>
+
+  </div>
+
+  <!-- QR BUBBLE DI OPENING -->
+  <div id="qrBubble" onclick="openQrPopup()">
+    <img src="https://cdn-icons-png.flaticon.com/512/2099/2099058.png" alt="QR">
+    <div class="qr-hint">
+      🎁 Tunjukan QR Code ini
+      saat hadir<br>
+      <b>untuk souvenir menarik</b>
+      <br>selama persedian masih ada
+    </div>
+  </div>
+</div></div>
+
+<!-- POPUP QR -->
+<div id="qrPopup">
+  <div class="qr-box">
+    <span class="close" onclick="closeQrPopup()">✕</span>
+    <h3>Scan QR </h3>
+    <div id="qrcode"></div>
+    <p id="qrNama"></p>
+  </div>
+</div>
+  
+  
+</div>  <audio id="bgMusic" loop>  
+  <source src="media/2323.mp3" type="audio/mpeg">  
+</audio>
+ <div id="stickyBride">
+  <span>Ahmad & Aisyah</span>
+</div>
+  <header>
+  <div class="header-text">    
+    <p>Menikah</p>  
+    <h2>Ahmad & Aisyah</h2>  
+  </div>
+</header>
+<div id="countdownWrapper">  
+  <div>Menuju Acara</div>  
+  <ul>  
+    <li><span id="d">0</span> Hari</li>  
+    <li><span id="h">0</span> Jam</li>  
+    <li><span id="m">0</span> Menit</li>  
+    <li><span id="s">0</span> Detik</li>  
+  </ul>  
+</div>  <section id="home" class="tab-content active show">  
+  <h2 class="slideUp" id="homeH2"></h2>  
+  <p class="slideUp" id="homeP"></p>  
+</section>  <section id="acara" class="tab-content">  
+  <h2 class="slideUp" id="acaraH2"></h2>  
+  <div class="slideUp" id="acaraCard"></div>  
+</section>  <section id="galeri" class="tab-content">  
+  <h2>Galeri Prewedding</h2>  
+  <div class="gallery-grid" id="galeriGrid"></div>  
+</section>  <section id="bukutamu" class="tab-content">  
+  <h2>Buku Tamu</h2>  
+  <div id="bukuForm">  
+    <input id="namaHadir" placeholder="Nama Anda">  
+    
+    <textarea id="ucapan" placeholder="Ucapan & Doa"></textarea>  
+    <button class="action" id="btnUcapan" onclick="kirimUcapan()">Kirim Ucapan</button>
+    <div id="listHadir"></div>  
+  </div>  
+</section>  <section id="lokasi" class="tab-content">  
+  <h2>Lokasi</h2>  
+  <iframe id="iframeLokasi" width="100%" height="200" style="border:0;" src="https://maps.google.com/maps?q=masjid&t=&z=13&ie=UTF8&iwloc=&output=embed"></iframe>  
+</section>  <div class="tabs">  
+  <button class="active" onclick="openTab('home',this)">🏠 Home</button>  
+  <button onclick="openTab('acara',this)">📅 Acara</button>  
+  <button onclick="openTab('galeri',this)">🖼️ Galeri</button>  
+  <button onclick="openTab('bukutamu',this)">📖 Buku Tamu</button>  
+  <button onclick="openTab('lokasi',this)">📍 Lokasi</button>  
+</div>  <div id="galleryPopup" onclick="closeGallery()">  
+  <span class="close">✕</span>  
+  <img id="popupImg">  
+</div> 
+  
+
+  
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script> 
+  <!-- FIREBASE V8 CDN -->  
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>  
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script> 
+  <script>
+let qrGenerated = false;
+
+function openQrPopup(){
+  const popup = document.getElementById("qrPopup");
+  popup.classList.add("show");
+
+  if(!qrGenerated){
+
+    // 1️⃣ bikin ID tamu aman
+    const idTamu = namaTamu
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "_")
+      .replace(/^_|_$/g, "");
+
+    // 2️⃣ isi QR: id|nama
+    const qrText = idTamu + "|" + namaTamu;
+
+    // 3️⃣ bersihkan QR lama (antisipasi bug)
+    document.getElementById("qrcode").innerHTML = "";
+
+    // 4️⃣ generate QR
+    new QRCode(document.getElementById("qrcode"), {
+      text: qrText,
+      width: 280,
+      height: 280
+    });
+
+    document.getElementById("qrNama").textContent = namaTamu;
+    qrGenerated = true;
+  }
+}
+
+function closeQrPopup(){
+  document.getElementById("qrPopup").classList.remove("show");
+}
+</script>
+  <script>  
+  /************************************************
+ * KONTEN TEKS (TINGGAL EDIT DI SINI)
+ ************************************************/
+const KONTEN = {
+  home: {
+    judul: "assalamualaikum",
+    isi: "Kami mengundang tamu terhormat untuk hadir dan memberikan doa restu di hari bahagia kami.\n dan sebagaimana mestinya kami mengundanga agar bapak ibu hadir ditempat kami\n untuk itu untuk kedatangan nya semoga ada berkah selalu \n turut berbahagoa\n kedua mempelai \n "
+  },
+  acara: {
+    judul: "Waktu & Tempat",
+    isi: "📅 Minggu, 20 April 2026\n🕙 10.00 WIB\n📍 Masjid Agung Kota"
+  }
+};
+/************************************************  
+ * FIREBASE INIT  
+ ************************************************/  
+var firebaseConfig = {  
+  apiKey: "AIzaSyAbFiLWZS5H1672SpouCn1deEAAn4qVqDs",  
+  authDomain: "undanganwidi.firebaseapp.com",  
+  databaseURL: "https://undanganwidi-default-rtdb.asia-southeast1.firebasedatabase.app",  
+  projectId: "undanganwidi",  
+  storageBucket: "undanganwidi.appspot.com",  
+  messagingSenderId: "1008914265977",  
+  appId: "1:1008914265977:web:9ba70d9f8a1ab4b56c61a8"  
+};  
+firebase.initializeApp(firebaseConfig);  
+var db = firebase.database();  
+  
+/************************************************  
+ * NAMA TAMU DARI URL  
+ ************************************************/  
+const params = new URLSearchParams(window.location.search);  
+const namaTamu = params.get("to") || "Tamu Undangan";  
+document.getElementById("namaTamuOpen").textContent = namaTamu;   
+const inputNama = document.getElementById("namaHadir");  
+if(inputNama){ inputNama.value = namaTamu; inputNama.readOnly = true; }  
+  
+/************************************************  
+ * OPENING  
+ ************************************************/  
+document.addEventListener("DOMContentLoaded", ()=>{
+  setTimeout(()=>{
+    document.getElementById("openingBox").classList.add("show");
+    typeWriter(document.getElementById("namaTamuOpen"), namaTamu, 60);
+  },200);
+document.getElementById("qrBubble").style.display = "flex"; // 👈 tampilkan QR
+  slideUpTeks("homeH2", KONTEN.home.judul);
+slideUpTeks("homeP", KONTEN.home.isi.replace("tamu terhormat", namaTamu));
+  generateGallery();
+  
+});
+  
+/************************************************  
+ * OPEN UNDANGAN  
+ ************************************************/  
+function bukaUndangan(){  
+  document.getElementById("opening").style.display="none";  
+  const music=document.getElementById("bgMusic");  
+  music.volume=0.5;  
+  music.play().catch(()=>{});  
+}  
+  
+/************************************************  
+ * TAB NAVIGATION  
+ ************************************************/  
+function openTab(id,btn){
+  changeHeaderImage(id); // <-- ganti header sesuai tab
+
+  document.querySelectorAll(".tab-content").forEach(s=>s.classList.remove("active","show"));  
+  document.querySelectorAll(".tabs button").forEach(b=>b.classList.remove("active"));  
+  const tab=document.getElementById(id);  
+  tab.classList.add("active");  
+  setTimeout(()=>tab.classList.add("show"),50);  
+  btn.classList.add("active");  
+
+  // slideUp teks
+  if(id==="home"){
+    slideUpTeks("homeH2", KONTEN.home.judul);
+    slideUpTeks("homeP", KONTEN.home.isi.replace("tamu terhormat", namaTamu));
+  }
+
+  if(id==="acara"){
+    slideUpTeks("acaraH2", KONTEN.acara.judul);
+    slideUpTeks("acaraCard", KONTEN.acara.isi);
+  }  
+
+  if(id==="galeri"){document.getElementById("galeriGrid").classList.add("show");}  
+  if(id==="bukutamu"){const f=document.getElementById("bukuForm");f.style.transform="scale(1)";f.style.opacity="1";}  
+  if(id==="lokasi"){const m=document.getElementById("iframeLokasi");m.style.transform="scale(1)";m.style.opacity="1";}  
+}  
+  
+/************************************************  
+ * TYPEWRITER TEXT  
+ ************************************************/  
+function typeWriter(el, text, speed = 35){
+  el.textContent = "";
+  el.classList.add("typing-cursor");
+  let i = 0;
+
+  function ketik(){
+    if(i < text.length){
+      el.textContent += text.charAt(i);
+      i++;
+      setTimeout(ketik, speed);
+    } else {
+      el.classList.remove("typing-cursor");
+    }
+  }
+  ketik();
+}
+
+function slideUpTeks(id, text){
+  const el = document.getElementById(id);
+  if(!el) return;
+  el.classList.remove("show");
+  void el.offsetWidth; // reset animasi
+  el.classList.add("show");
+
+  setTimeout(()=> typeWriter(el, text), 200);
+}
+  
+/************************************************  
+ * COUNTDOWN WIB  
+ ************************************************/  
+const target=new Date(Date.UTC(2026,3,20,3,0,0)).getTime();  
+const d=document.getElementById("d"),h=document.getElementById("h"),m=document.getElementById("m"),s=document.getElementById("s");  
+setInterval(()=>{  
+  const diff=target-Date.now();  
+  if(diff<=0){d.textContent=h.textContent=m.textContent=s.textContent="0"; return;}  
+  d.textContent=Math.floor(diff/86400000);  
+  h.textContent=Math.floor(diff/3600000)%24;  
+  m.textContent=Math.floor(diff/60000)%60;  
+  s.textContent=Math.floor(diff/1000)%60;  
+},1000);  
+  
+/************************************************  
+ * BUKU TAMU  
+ ************************************************/  
+  
+function kirimUcapan(){
+  const textarea = document.getElementById("ucapan");
+  const pesan = textarea.value.trim();
+  if(!pesan){
+    alert("Ucapan & doa belum diisi");
+    return;
+  }
+
+  const idTamu = namaTamu.replace(/\s+/g,'_').toLowerCase();
+  const refTamu = db.ref("bukutamu/"+idTamu);
+
+  refTamu.once("value", snap => {
+
+    // JIKA SUDAH ADA UCAPAN → MODE EDIT
+    if(snap.exists()){
+      refTamu.update({
+        pesan: pesan,
+        waktuEdit: Date.now()
+      });
+
+      alert("Ucapan berhasil diperbarui ✏️");
+    }
+
+    // JIKA BELUM ADA → MODE KIRIM PERTAMA
+    else{
+      refTamu.set({
+        nama: namaTamu,
+        pesan: pesan,
+        hadir: false,
+        waktu: Date.now(),
+        like: 0
+      });
+
+      alert("Ucapan berhasil dikirim 💛");
+    }
+  });
+}
+db.ref("bukutamu").on("value", snap => {
+  const list = document.getElementById("listHadir");
+  if(!list) return;
+
+  list.innerHTML = ""; // ⬅️ reset list
+
+  snap.forEach(child => {
+    const data = child.val();
+    const key = child.key;
+
+    const warna = data.hadir ? "#e6f7ee" : "#f5f5f5";
+    const jam = data.hadir && data.waktuHadir
+  ? ` • ${formatJam(data.waktuHadir)}`
+  : "";
+
+const badge = data.hadir
+  ? "🟢 Hadir" + jam
+  : "⏳ Belum Hadir";
+
+    const item = document.createElement("div");
+    item.style.cssText = `
+      padding:12px;
+      margin:10px 0;
+      border-radius:14px;
+      background:${warna};
+      box-shadow:0 2px 6px rgba(0,0,0,0.06);
+      position:relative;
+    `;
+
+    item.innerHTML = `
+      <b>${data.nama || "Tamu"}</b>
+      <small style="margin-left:6px">${badge}</small><br>
+      <small>${data.pesan || ""}</small>
+
+      <div style="
+        position:absolute;
+        right:12px;
+        top:50%;
+        transform:translateY(-50%);
+        cursor:pointer;
+        text-align:center;
+      " onclick="likeUcapan('${key}')">
+        ❤️
+        <div id="like-${key}" style="font-size:12px;color:#b8860b">
+          ${data.like ?? 0}
+        </div>
+      </div>
+    `;
+
+    list.prepend(item);
+  });
+});
+  
+  function likeUcapan(id){
+  const key = "liked_"+id;
+
+  if(localStorage.getItem(key)){
+    alert("Kamu sudah menyukai ucapan ini ❤️");
+    return;
+  }
+
+  localStorage.setItem(key, "1");
+
+  db.ref("bukutamu/"+id+"/like")
+    .transaction(current => (current ?? 0)+1);
+}
+function formatJam(ts){
+  if(!ts) return "";
+  const d = new Date(ts);
+  return d.toLocaleTimeString("id-ID", {
+    hour: "2-digit",
+    minute: "2-digit"
+  }) + " WIB";
+}
+db.ref("bukutamu").on("child_changed",snap=>{
+  const data=snap.val()||{};
+  const el=document.getElementById("like-"+snap.key);
+  if(el) el.textContent=data.like ?? 0;
+});
+  const idTamu = namaTamu.replace(/\s+/g,'_').toLowerCase();
+
+db.ref("bukutamu/"+idTamu).once("value", snap=>{
+  if(!snap.exists()) return;
+
+  const data = snap.val();
+  if(data.pesan){
+    document.getElementById("ucapan").value = data.pesan;
+    document.getElementById("btnUcapan").textContent = "✏️ Edit Ucapan";
+  }
+});
+
+
+/************************************************  
+ * GALERI OTOMATIS + POPUP + SWIPE  
+ ************************************************/  
+let galleryImages=[],currentIndex=0;  
+function generateGallery(){  
+  const grid=document.getElementById("galeriGrid");  
+  const folder="media/";  
+  const total=18;  
+  for(let i=1;i<=total;i++){  
+    const img=document.createElement("img");  
+    img.src=folder+i+".jpg";  
+    img.alt="Foto "+i;  
+    grid.appendChild(img);  
+  }  
+  initGallery();  
+}  
+function initGallery(){  
+  galleryImages=Array.from(document.querySelectorAll("#galeriGrid img"));  
+  galleryImages.forEach((img,i)=>img.addEventListener("click",()=>openGallery(i)));  
+}  
+function openGallery(i){  
+  currentIndex=i;  
+  const popup=document.getElementById("galleryPopup");  
+  const img=document.getElementById("popupImg");  
+  img.src=galleryImages[i].src;  
+  popup.style.display="flex";  
+  setTimeout(()=>popup.classList.add("show"),50);  
+}  
+function closeGallery(){  
+  const popup=document.getElementById("galleryPopup");  
+  popup.classList.remove("show");  
+  setTimeout(()=>popup.style.display="none",400);  
+}  
+  
+  
+  const headerImages = {
+  home: 'media/header1.jpg',
+  acara: 'media/header2.jpg',
+  galeri: 'media/header3.jpg',
+  bukutamu: 'media/header4.jpg',
+  lokasi: 'media/header5.jpg'
+};
+
+function changeHeaderImage(tabId){
+  const header = document.querySelector('header');
+  if(headerImages[tabId]){
+    header.classList.add('animate'); // trigger animasi
+    setTimeout(()=> header.classList.remove('animate'), 800);
+
+    // ganti foto
+    header.style.backgroundImage = `url('${headerImages[tabId]}')`;
+  }
+}
+// --- SWIPE POPUP ---  
+let startX=0,endX=0;  
+const popup=document.getElementById("galleryPopup");  
+popup.addEventListener("touchstart", e=>{startX=e.touches[0].clientX;});  
+popup.addEventListener("touchmove", e=>{endX=e.touches[0].clientX;});  
+popup.addEventListener("touchend", ()=>{  
+  const diff=endX-startX;  
+  if(Math.abs(diff)>50){  
+    if(diff<0) showNext();  
+    else showPrev();  
+  }  
+  startX=0; endX=0;  
+});  
+  
+  
+  function animasiHeader() {
+  const kiri = document.getElementById("imgKiri");
+  const kanan = document.getElementById("imgKanan");
+
+  kiri.classList.remove("animate-left");
+  kanan.classList.remove("animate-right");
+
+  // reset biar bisa dipicu ulang
+  void kiri.offsetWidth;
+
+  kiri.classList.add("animate-left");
+  kanan.classList.add("animate-right");
+
+  // Balik normal setelah animasi selesai
+  setTimeout(() => {
+    kiri.classList.remove("animate-left");
+    kanan.classList.remove("animate-right");
+  }, 900);
+}
+function showNext(){currentIndex=(currentIndex+1)%galleryImages.length;document.getElementById("popupImg").src=galleryImages[currentIndex].src;}  
+function showPrev(){currentIndex=(currentIndex-1+galleryImages.length)%galleryImages.length;document.getElementById("popupImg").src=galleryImages[currentIndex].src;}  
+  </script>  
+  <script>
+const stickyBride = document.getElementById("stickyBride");
+const header = document.querySelector("header");
+
+window.addEventListener("scroll", () => {
+  const triggerPoint = header.offsetHeight - 60;
+
+  if(window.scrollY > triggerPoint){
+    stickyBride.classList.add("show");
+  } else {
+    stickyBride.classList.remove("show");
+  }
+});
+</script>
+</body>  
+</html>
