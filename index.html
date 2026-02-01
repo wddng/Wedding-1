@@ -112,6 +112,18 @@ function onScanSuccess(text){
 }
 
 window.addEventListener("load", startScan);
+  
+  
+  function prosesScanQR(dataQR){
+  const [idTamu, nama] = dataQR.split("|");
+
+  db.ref("bukutamu/"+idTamu).update({
+    hadir: true,
+    waktuHadir: Date.now()
+  }).then(()=>{
+    alert("✅ Kehadiran tercatat: " + nama);
+  });
+}
 </script>
 
 </body>
