@@ -2,129 +2,51 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<title>Scanner Buku Tamu</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Scan Kehadiran</title>
 
 <script src="https://unpkg.com/html5-qrcode"></script>
 
-<!-- Firebase -->
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
-
-<style>
-body{
-  font-family:Arial, sans-serif;
-  text-align:center;
-  padding:16px;
-}
-#reader{
-  width:300px;
-  margin:auto;
-}
-#status{
-  margin-top:14px;
-  font-size:15px;
-}
-.success{color:green}
-.error{color:red}
-</style>
 </head>
-<body>
 
-<h3>📸 Scan QR Tamu</h3>
-<div id="reader"></div>
-<div id="status">Arahkan kamera ke QR</div>
+<body>
+<h2>Scan QR Kehadiran</h2>
+<div id="reader" style="width:300px"></div>
+<p id="status"></p>
 
 <script>
-/* ================= FIREBASE INIT ================= */
+/* FIREBASE */
 firebase.initializeApp({
   apiKey: "AIzaSyAbFiLWZS5H1672SpouCn1deEAAn4qVqDs",
   databaseURL: "https://undanganwidi-default-rtdb.asia-southeast1.firebasedatabase.app"
 });
+
 const db = firebase.database();
 
-/* ================= SCANNER ================= */
-let qr;
+/* QR SCAN */
+const qr = new Html5Qrcode("reader");
 
-function startScan(){
-  Html5Qrcode.getCameras().then(cameras => {
-    if(!cameras.length){
-      alert("Kamera tidak ditemukan");
-      return;
-    }
+qr.start(
+  { facingMode: "environment" },
+  { fps: 10, qrbox: 250 },
+  (decodedText) => {
+    // hasil: id|nama
+    const [idTamu, nama] = decodedText.split("|");
 
-    const cameraId = cameras[cameras.length - 1].id; // kamera belakang
-    qr = new Html5Qrcode("reader");
+    if(!idTamu) return;
 
-    qr.start(
-      cameraId,
-      { fps:8, qrbox:{width:220,height:220} },
-      onScanSuccess,
-      err => {}
-    );
-  });
-}
+    db.ref("bukutamu/" + idTamu).update({
+      hadir: true,
+      waktuHadir: Date.now()
+    });
 
-function onScanSuccess(text){
-  qr.stop(); // stop biar tidak dobel scan
-
-  // FORMAT QR: id|nama
-  const data = text.split("|");
-  if(data.length < 2){
     document.getElementById("status").innerHTML =
-      "<span class='error'>QR tidak valid</span>";
-    setTimeout(startScan, 2000);
-    return;
+      "✅ Kehadiran dicatat: <b>" + nama + "</b>";
+
+    qr.stop();
   }
-
-  const id   = data[0];
-  const nama = data[1];
-
-  const ref = db.ref("bukutamu/" + id);
-
-  ref.once("value").then(snap=>{
-    if(snap.exists()){
-      // sudah ada → update hadir
-      ref.update({
-        status: "Hadir",
-        waktuHadir: Date.now()
-      });
-
-      document.getElementById("status").innerHTML =
-        "<span class='success'>✅ "+nama+" sudah hadir</span>";
-    }else{
-      // tamu baru
-      ref.set({
-        nama: nama,
-        status: "Hadir",
-        pesan: "",
-        waktuHadir: Date.now(),
-        like: 0
-      });
-
-      document.getElementById("status").innerHTML =
-        "<span class='success'>🎉 "+nama+" berhasil check-in</span>";
-    }
-
-    // scan ulang setelah 2 detik
-    setTimeout(startScan, 2000);
-  });
-}
-function prosesScanQR(dataQR){
-  const [idTamu, nama] = dataQR.split("|");
-
-  db.ref("bukutamu/"+idTamu).update({
-    hadir: true,
-    waktuHadir: Date.now()
-  }).then(()=>{
-    alert("✅ Kehadiran tercatat: " + nama);
-  });
-}
-window.addEventListener("load", startScan);
-  
-  
-  
+);
 </script>
-
 </body>
 </html>
